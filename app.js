@@ -1,30 +1,23 @@
 const express = require('express');
-//use axios + install
 const axios = require('axios');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Use the provided PORT or default to 3000
 
 app.set('view engine', 'ejs');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-//home route
 app.get('/', (req, res) => {
-  res.render('index');
+  res.render('index', { title: 'Cat Fact App' });
 });
 
-//cat fact route
 app.get('/cats/fact', async (req, res) => {
   try {
-    //GET
     const response = await axios.get('https://catfact.ninja/fact');
     const catFact = response.data.fact;
 
-  
-
-    //render
     res.render('cat/fact', { catFact });
   } catch (error) {
     console.error('Error fetching cat fact:', error.message);
@@ -32,9 +25,5 @@ app.get('/cats/fact', async (req, res) => {
   }
 });
 
-//server
-app.listen(port, () => {
-  console.log('server is up and running');
-});
 
 module.exports = app;
